@@ -8,6 +8,18 @@ ami = "ami-03c3a7e4263fd998c"
 instance_type = "t2.micro"
 key_name = aws_key_pair.mykey.key_name
 vpc_security_group_ids = [ aws_security_group.sg.id ]
+user_data = <<EOF
+#!/bin/bash
+export JAVA_HOME="/usr/lib/jvm/jre"
+yum update -y
+#yum install tomcat9 tomcat9-webapps java-1.8.0-openjdk java-1.8.0-openjdk-devel java-1.8.0-openjdk-javadoc mariadb-server -y
+yum install httpd -y
+systemctl start httpd
+systemctl status httpd
+systemctl enable httpd
+curl localhost
+EOF
+
 tags = {
     Name="TF-Code-ec2"
     Environment="Dev"
