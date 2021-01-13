@@ -1,0 +1,31 @@
+provider "aws" {
+    region = "eu-central-1"
+}
+
+variable "azs" {
+default = ["eu-central-1a","eu-central-1a","eu-central-1a"]
+}
+
+
+# creating ec2 instance
+resource "aws_instance" "web" {
+count=length(var.azs)
+#subnet_id = "${var.azs[count.index]}"
+ami = "ami-03c3a7e4263fd998c"
+instance_type = "t2.micro"
+key_name = aws_key_pair.mykey.key_name
+vpc_security_group_ids = [ aws_security_group.sg.id ]
+tags = {
+    Name="TF-Code-${count.index+1}"
+    AZ_Name=var.azs[count.index]
+    Environment="Dev"
+}
+}
+
+##  ssh-keygen -f tf_ec2_key
+
+resource "aws_key_pair" "mykey" {
+key_name = "my-ec2-key"
+public_key = file("tf_ec2_key.pub") 
+}
+
