@@ -1,6 +1,6 @@
 resource "aws_security_group" "sg" {
   name ="ec2-sg"
-  description = "secuirty group for ec2 machine"
+  description = "Security Group using TF"
 
 ingress  {
   from_port = 22
