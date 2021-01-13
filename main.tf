@@ -4,6 +4,7 @@ provider "aws" {
 
 # creating ec2 instance
 resource "aws_instance" "web" {
+count= 3
 ami = "ami-03c3a7e4263fd998c"
 instance_type = "t2.micro"
 key_name = aws_key_pair.mykey.key_name
@@ -19,7 +20,11 @@ systemctl status httpd
 systemctl enable httpd
 curl localhost
 EOF
+root_block_device {
+volume_size = 11
+encrypted =   true
 
+}
 tags = {
     Name="TF-Code-ec2"
     Environment="Dev"
@@ -36,5 +41,5 @@ public_key = file("tf_ec2_key.pub")
 
 
 output "ec2_public_ip" {
-    value = aws_instance.web.public_ip
+    value = aws_instance.web.*.public_ip
 }
